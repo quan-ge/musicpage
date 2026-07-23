@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <link rel="icon" href="" id="favicon">
+    <title id="pageTitle">QuanGe · 歌单</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 45px;
+            font-size: 16px;
+            font-family: sans-serif;
+            line-height: 1.25;
+        }
+
+        #header {
+            display: flex;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));
+            margin-bottom: 16px;
+        }
+
+        #footer {
+            display: none;
+        }
+
+        .avatar {
+            transition: 0.8s;
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+        }
+
+        .avatar:hover {
+            transform: scale(1.15) rotate(360deg);
+        }
+
+        .title-left a {
+            color: inherit;
+            text-decoration: none;
+            vertical-align: bottom;
+            font-size: 40px;
+            font-weight: bold;
+            font-family: Monaco;
+            margin-left: 8px;
+        }
+
+        .title-right {
+            display: flex;
+            margin: auto 0 0 auto;
+        }
+
+        .title-right button {
+            margin-right: 8px;
+            padding: 16px;
+        }
+
+        .title-right .circle {
+            padding: 14px 16px;
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));
+            transition: background 0.15s;
+            cursor: default;
+        }
+
+        .song-item:hover {
+            background: var(--bgColor-muted, var(--color-canvas-subtle));
+        }
+
+        .song-item:last-child {
+            border-bottom: none;
+        }
+
+        .song-index {
+            width: 32px;
+            font-size: 14px;
+            color: var(--fgColor-muted, var(--color-fg-muted));
+            text-align: center;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+
+        .song-info {
+            flex: 1;
+            margin: 0 16px;
+            min-width: 0;
+        }
+
+        .song-name {
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-artist {
+            font-size: 14px;
+            color: var(--fgColor-muted, var(--color-fg-muted));
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--borderColor-muted, var(--color-border-muted));
+            background: var(--bgColor-muted, var(--color-canvas-subtle));
+            color: var(--fgColor-default, var(--color-fg-default));
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: var(--bgColor-default, var(--color-neutral-muted));
+            transform: scale(1.08);
+            border-color: var(--fgColor-default, var(--color-fg-default));
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .action-btn-text {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            height: 36px;
+            border-radius: 18px;
+            border: 1px solid var(--borderColor-muted, var(--color-border-muted));
+            background: var(--bgColor-muted, var(--color-canvas-subtle));
+            color: var(--fgColor-default, var(--color-fg-default));
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .action-btn-text:hover {
+            background: var(--bgColor-default, var(--color-neutral-muted));
+            transform: scale(1.05);
+            border-color: var(--fgColor-default, var(--color-fg-default));
+        }
+
+        .song-list-container {
+            border: 1px solid var(--borderColor-muted, var(--color-border-muted));
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bgColor-muted, var(--color-canvas-subtle));
+            margin-top: 8px;
+        }
+
+        .list-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bgColor-muted, var(--color-canvas-subtle));
+            border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--fgColor-muted, var(--color-fg-muted));
+        }
+
+        .list-header .header-index {
+            width: 32px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .list-header .header-info {
+            flex: 1;
+            margin: 0 16px;
+        }
+
+        .list-header .header-actions {
+            flex-shrink: 0;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .badge {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--fgColor-muted, var(--color-fg-muted));
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--fgColor-muted, var(--color-fg-muted));
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .blogTitle {
+                display: none;
+            }
+
+            .song-item {
+                padding: 10px 12px;
+                flex-wrap: wrap;
+            }
+
+            .song-name {
+                font-size: 15px;
+            }
+
+            .song-artist {
+                font-size: 13px;
+            }
+
+            .song-index {
+                width: 28px;
+                font-size: 13px;
+            }
+
+            .list-header .header-index {
+                width: 28px;
+            }
+
+            .list-header .header-actions {
+                min-width: 60px;
+            }
+
+            .action-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+
+            .action-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .action-btn-text {
+                height: 32px;
+                font-size: 12px;
+                padding: 0 10px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .action-buttons {
+                gap: 6px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div class="title-left">
+            <img src="" class="avatar circle" id="avatarImg" alt="avatar">
+            <a class="blogTitle" href="" id="blogLink"><span style="font-size:0;" id="blogFirstLetter">Q</span><span id="blogName">uanGe</span></a>
+        </div>
+        <div class="title-right">
+            <a class="btn btn-invisible circle" onclick="modeSwitch()" title="切换主题">
+                <svg class="octicon" width="16" height="16">
+                    <path id="themeSwitch" fill-rule="evenodd"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="section-title">
+            <span id="playlistIcon">🎵</span> <span id="playlistTitle">歌单</span>
+            <span class="badge" id="songCount">· 加载中...</span>
+        </div>
+
+        <div class="song-list-container">
+            <div class="list-header">
+                <span class="header-index">#</span>
+                <span class="header-info">歌曲</span>
+                <span class="header-actions">链接</span>
+            </div>
+            <div id="songList">
+                <div class="loading">⏳ 加载歌单数据...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== 数据文件路径 =====
+        var CONFIG_URL = 'data/config.json';
+        var DATA_URL = 'data/musiclist.json';
+        var ICONS_URL = 'data/icons.json';
+
+        // 存储数据
+        var config = {};
+        var songs = [];
+        var platformIcons = {};
+
+        // ===== 应用配置 =====
+        function applyConfig() {
+            if (config.title) {
+                document.getElementById('pageTitle').textContent = config.title;
+            }
+            if (config.favicon) {
+                document.getElementById('favicon').href = config.favicon;
+            }
+            if (config.avatar) {
+                document.getElementById('avatarImg').src = config.avatar;
+            }
+            if (config.blogName) {
+                document.getElementById('blogName').textContent = config.blogName;
+                document.getElementById('blogFirstLetter').textContent = config.blogName.charAt(0) || 'Q';
+            }
+            if (config.blogLink) {
+                document.getElementById('blogLink').href = config.blogLink;
+            }
+            if (config.playlistIcon) {
+                document.getElementById('playlistIcon').textContent = config.playlistIcon;
+            }
+            if (config.playlistTitle) {
+                document.getElementById('playlistTitle').textContent = config.playlistTitle;
+            }
+            console.log('✅ 配置已应用');
+        }
+
+        // ===== 加载配置 =====
+        function loadConfig() {
+            return fetch(CONFIG_URL)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP错误: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    config = data;
+                    console.log('✅ 配置加载成功');
+                    applyConfig();
+                })
+                .catch(function(error) {
+                    console.warn('⚠️ 加载配置失败', error);
+                    config = {};
+                });
+        }
+
+        // ===== 渲染歌单 =====
+        function renderPlaylist() {
+            var html = '';
+            if (songs.length === 0) {
+                html = '<div class="loading">📭 暂无歌曲</div>';
+            } else {
+                for (var i = 0; i < songs.length; i++) {
+                    var song = songs[i];
+                    var number = i + 1;
+
+                    var buttons = '';
+                    if (song.links) {
+                        var linkKeys = Object.keys(song.links);
+                        for (var j = 0; j < linkKeys.length; j++) {
+                            var platform = linkKeys[j];
+                            var url = song.links[platform];
+
+                            if (platformIcons && platformIcons[platform]) {
+                                buttons += '<a href="' + url + '" target="_blank" class="action-btn" title="' + platform + '">' + platformIcons[platform] + '</a>';
+                            } else {
+                                var shortName = platform.length > 4 ? platform.substring(0, 3) : platform;
+                                buttons += '<a href="' + url + '" target="_blank" class="action-btn-text" title="' + platform + '">' + shortName + '</a>';
+                            }
+                        }
+                    }
+
+                    html += '<div class="song-item">';
+                    html += '  <span class="song-index">' + number + '</span>';
+                    html += '  <div class="song-info">';
+                    html += '    <div class="song-name">' + (song.name || '未知歌曲') + '</div>';
+                    html += '    <div class="song-artist">' + (song.artist || '未知艺术家') + '</div>';
+                    html += '  </div>';
+                    html += '  <div class="action-buttons">' + buttons + '</div>';
+                    html += '</div>';
+                }
+            }
+
+            document.getElementById('songList').innerHTML = html;
+            document.getElementById('songCount').textContent = '· ' + songs.length + ' 首';
+            console.log('✅ 歌单渲染完成，共 ' + songs.length + ' 首歌');
+        }
+
+        // ===== 加载图标数据 =====
+        function loadIcons() {
+            return fetch(ICONS_URL)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP错误: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    platformIcons = data;
+                    console.log('✅ 图标加载成功', Object.keys(platformIcons).length + ' 个图标');
+                })
+                .catch(function(error) {
+                    console.warn('⚠️ 加载图标失败，将使用文字按钮:', error);
+                    platformIcons = {};
+                });
+        }
+
+        // ===== 加载歌单数据 =====
+        function loadSongs() {
+            return fetch(DATA_URL)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP错误: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data && Array.isArray(data)) {
+                        songs = data;
+                    } else {
+                        throw new Error('数据格式错误：期望数组');
+                    }
+                    console.log('✅ 歌单加载成功，共 ' + songs.length + ' 首歌');
+                })
+                .catch(function(error) {
+                    console.error('❌ 加载歌单失败:', error);
+                    songs = [];
+                    document.getElementById('songList').innerHTML = '<div class="loading">❌ 加载失败: ' + error.message;
+                    document.getElementById('songCount').textContent = '· 加载失败';
+                    throw error;
+                });
+        }
+
+        // ===== 加载所有数据 =====
+        function loadAllData() {
+            console.log('⏳ 开始加载数据...');
+
+            loadConfig()
+                .then(function() {
+                    return loadIcons();
+                })
+                .then(function() {
+                    return loadSongs();
+                })
+                .then(function() {
+                    renderPlaylist();
+                })
+                .catch(function(error) {
+                    console.error('❌ 加载数据失败:', error);
+                });
+        }
+
+        // ===== 主题切换 =====
+        var IconList = {
+            sun: 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z',
+            moon: 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z',
+            sync: 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z'
+        };
+
+        var themeSettings = {
+            dark: ["dark", "moon", "#00f0ff"],
+            light: ["light", "sun", "#ff5000"],
+            auto: ["auto", "sync", ""]
+        };
+
+        function changeTheme(mode, icon, color) {
+            document.documentElement.setAttribute("data-color-mode", mode);
+            document.getElementById("themeSwitch").setAttribute("d", IconList[icon]);
+            if (color) document.getElementById("themeSwitch").parentNode.style.color = color;
+        }
+
+        function modeSwitch() {
+            var currentMode = document.documentElement.getAttribute('data-color-mode');
+            var newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+            localStorage.setItem("meek_theme", newMode);
+            if (themeSettings[newMode]) changeTheme.apply(null, themeSettings[newMode]);
+        }
+
+        // ===== 初始化 =====
+        (function() {
+            var theme = localStorage.getItem("meek_theme") || "light";
+            document.documentElement.setAttribute("data-color-mode", theme);
+            if (themeSettings[theme]) changeTheme.apply(null, themeSettings[theme]);
+
+            loadAllData();
+        })();
+    </script>
+</body>
+
+</html>
