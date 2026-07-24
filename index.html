@@ -148,6 +148,12 @@
             fill: currentColor;
         }
 
+        .action-btn img {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
         .action-btn-text {
             display: inline-flex;
             align-items: center;
@@ -277,6 +283,11 @@
             .action-btn svg {
                 width: 14px;
                 height: 14px;
+            }
+
+            .action-btn img {
+                width: 16px;
+                height: 16px;
             }
 
             .action-btn-text {
@@ -411,7 +422,15 @@
                             var url = song.links[platform];
 
                             if (platformIcons && platformIcons[platform]) {
-                                buttons += '<a href="' + url + '" target="_blank" class="action-btn" title="' + platform + '">' + platformIcons[platform] + '</a>';
+                                var iconValue = platformIcons[platform];
+                                // 判断是 SVG 文件路径还是 SVG 字符串
+                                if (iconValue.endsWith('.svg') || iconValue.startsWith('/') || iconValue.startsWith('http')) {
+                                    // 是文件路径，用 img 标签
+                                    buttons += '<a href="' + url + '" target="_blank" class="action-btn" title="' + platform + '"><img src="' + iconValue + '" alt="' + platform + '"></a>';
+                                } else {
+                                    // 是 SVG 字符串
+                                    buttons += '<a href="' + url + '" target="_blank" class="action-btn" title="' + platform + '">' + iconValue + '</a>';
+                                }
                             } else {
                                 var shortName = platform.length > 4 ? platform.substring(0, 3) : platform;
                                 buttons += '<a href="' + url + '" target="_blank" class="action-btn-text" title="' + platform + '">' + shortName + '</a>';
@@ -447,6 +466,7 @@
                 .then(function(data) {
                     platformIcons = data;
                     console.log('✅ 图标加载成功', Object.keys(platformIcons).length + ' 个图标');
+                    console.log('图标数据:', platformIcons);
                 })
                 .catch(function(error) {
                     console.warn('⚠️ 加载图标失败，将使用文字按钮:', error);
