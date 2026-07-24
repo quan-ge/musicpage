@@ -1,21 +1,40 @@
 [
   {
-    "name": "Gymnopédie No. 1",
-    "artist": "Erik Satie",
+    "name": "Life Goes On",
+    "artist": "Oliver Tree",
     "links": {
-      "网易云": "https://music.163.com/song/123456",
-      "Spotify": "https://open.spotify.com/track/123456",
-      "YouTube": "https://www.youtube.com/watch?v=123456",
-      "Apple Music": "https://music.apple.com/us/album/123456"
+      "网易云": "https://music.163.com/#/mv?id=14301303",
+      "Bilibili": "https://www.bilibili.com/video/BV1DK4y1G7uX/?"
     }
   },
   {
-    "name": "Clair de Lune",
-    "artist": "Claude Debussy",
+    "name": "Teeth",
+    "artist": "5 Seconds of Summer",
     "links": {
-      "网易云": "https://music.163.com/song/123457",
-      "Spotify": "https://open.spotify.com/track/123457",
-      "YouTube": "https://www.youtube.com/watch?v=123457"
+      "网易云": "https://music.163.com/#/mv?id=10884984",
+      "Bilibili": "https://www.bilibili.com/video/BV1iZ4y1N7st/"
+    }
+  },
+  {
+    "name": "はじまりの曲",
+    "artist": "厚揚げろが",
+    "links": {
+      "网易云": "https://music.163.com/#/song?id=2686608269",
+      "酷我": "https://www.kuwo.cn/play_detail/464352678"
+    }
+  },
+  {
+    "name": "Outside",
+    "artist": "Calvin Harris / Ellie Goulding",
+    "links": {
+      "网易云": "https://music.163.com/#/mv?id=361398"
+    }
+  },
+  {
+    "name": "圣诞快乐劳伦斯先生",
+    "artist": "坂本龍一",
+    "links": {
+      "Bilibili": "https://www.bilibili.com/video/BV1oK411q7mp/?"
     }
   }
 ]
