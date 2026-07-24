@@ -26,3 +26,15 @@
 3. 进入Settings -> Pages
 
 4. 开启Pages服务
+
+## Tips
+
+1. 添加更多网站Logo请修改 '/data/icons.json'
+
+   建议使用矢量图标，支持代码或svg文件
+
+2. 歌单储存在 'musiclist.json' 中
+
+   共有三项：name,artist,links
+
+   每一项都不是必填的
