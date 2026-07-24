@@ -11,6 +11,10 @@
 - 📦 **数据驱动** - 歌单和图标数据通过 JSON 文件管理，方便修改
 - 🎵 **轻松部署部署** - 无需服务器，GithubPages一键部署
 
+## Demo
+
+[https://music.quange.qzz.io/](https://music.quange.qzz.io/)
+
 ## 快速开始
 
 1. Fork本项目
